@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
-
 const TweetsContext = createContext()
 export const useTweets = () => useContext(TweetsContext)
 export default function TweetsProvider({ children }) {

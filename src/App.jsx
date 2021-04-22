@@ -21,12 +21,15 @@ function App() {
             <li>
               <Link to="/add">Add tweet</Link>
             </li>
+            <li>
+              <Link to="/liked">Liked tweets</Link>
+            </li>
           </ul>
         </nav>
         <Switch>
           <Route path="/liked">
             <h1>Liked tweets</h1>
-            <TweetsList tweetsData={tweets} />
+            <TweetsList tweetsData={tweets.filter(tweet => tweet.liked)} />
           </Route>
           <Route path="/add">
             <h1>Add new tweet</h1>
@@ -38,7 +41,6 @@ function App() {
           </Route>
         </Switch>
 
-        <div>list liked</div>
         <div>edit form</div>
       </div>
     </Router>
