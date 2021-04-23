@@ -40,7 +40,9 @@
   font-size: 24px;
   font-weight: 700;
   text-align: center;
-  margin: 10px 0 20px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 5px;
 }
 .tweet{
   background-color: #fff;

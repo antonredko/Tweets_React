@@ -1,5 +1,5 @@
-
 import { useTweets } from './../../hooks/useTweets';
+
 export default function Tweet({tweetData}) {
     const {tweetsAction} = useTweets()
     const dateFormatter = new Intl.DateTimeFormat()

@@ -3,7 +3,7 @@ import TweetsList from "./components/TweetsList/TweetsList";
 import TweetsForm from "./components/TweetForm/TweetForm";
 import { useTweets } from "./hooks/useTweets";
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link, useParams } from "react-router-dom";
 
 function App() {
   const { tweets } = useTweets();
