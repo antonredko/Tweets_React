@@ -1,35 +1,67 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTweets } from "./../../hooks/useTweets";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 export default function TweetsForm() {
+  const { tweetId } = useParams();
   const [tweetText, setTweetText] = useState("");
-  const [tweetAuthor, setTweetAuthor] = useState("")
+  const [tweetAuthor, setTweetAuthor] = useState("");
   const history = useHistory();
-  const { tweetsAction } = useTweets();
+  const { tweets, tweetsAction } = useTweets();
+
+  useEffect(() => {
+    if (tweetId) {
+      const tweet = tweets.find((tweet) => tweet.id == tweetId);
+      if (tweet) {
+        setTweetText(tweet.text);
+        setTweetAuthor(tweet.author);
+      } else{
+        history.push('/404')
+      }
+    } else{
+      setTweetText('');
+      setTweetAuthor('');
+    }
+  }, [tweetId]);
+  
   function saveTweet(e) {
     e.preventDefault();
-    const createTime = Date.now();
+    const actionTime = Date.now();
+    if (tweetId) {
+      editTweet(actionTime);
+    } else {
+      createTweet(actionTime);
+    }
+    history.push("/");
+  }
+
+  function editTweet(actionTime) {
+    tweetsAction({ type: "edit", payload: { id: +tweetId, newText: tweetText, newTimestamp: actionTime } });
+  }
+
+  function createTweet(actionTime) {
     const newTweet = {
-      id: createTime,
+      id: actionTime,
       author: tweetAuthor,
       text: tweetText,
-      timestamp: createTime,
+      timestamp: actionTime,
       liked: false,
     };
     tweetsAction({ type: "create", payload: newTweet });
-    history.push("/");
   }
+
   function cancelTweet(e) {
     history.push("/");
   }
+  
   return (
     <form className="tweet-form" onSubmit={saveTweet}>
-      <input 
+      <input
         type="text"
         name="tweetAuthor"
         placeholder="Name"
         value={tweetAuthor}
+        readOnly={!!tweetId}
         onChange={(e) => setTweetAuthor(e.target.value)}
       />
       <textarea

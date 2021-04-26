@@ -1,12 +1,26 @@
-import React, { createContext, useContext, useReducer } from 'react'
+import React, { createContext, useContext, useReducer, useEffect } from 'react'
 
 const TweetsContext = createContext()
 export const useTweets = () => useContext(TweetsContext)
 export default function TweetsProvider({ children }) {
     const [tweets, tweetsAction] = useReducer(tweetsReducer, [])
 
+    useEffect(() => {
+        if(!localStorage.getItem('tweets')) {
+            localStorage.setItem('tweets', JSON.stringify([]))
+        }
+        tweetsAction({type: "set", payload: JSON.parse(localStorage.getItem('tweets'))})
+    }, [])
+
+    useEffect(() => {
+        localStorage.setItem('tweets', JSON.stringify(tweets))
+    }, [tweets])
+
       function tweetsReducer(state, {type, payload}) {
         switch (type) {
+            case "set" : {
+                return [...payload]
+            }
             case "create" : {
                 return [...state, payload]
             }
@@ -21,6 +35,13 @@ export default function TweetsProvider({ children }) {
                 const newArray = [...state]
                 newArray[tweetIdx] = {...state[tweetIdx], liked: !state[tweetIdx].liked}
                 return newArray
+            }
+            case "edit" : {
+                const tweet = state.find(tweet => tweet.id === payload.id)
+                const tweets = state.filter(tweet => tweet.id !== payload.id)
+                tweet.text = payload.newText
+                tweet.timestamp = payload.newTimestamp
+                return [...tweets, tweet]
             }
             default:
                 throw new Error('Received wrong action type from dispatch function!')

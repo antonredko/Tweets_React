@@ -2,27 +2,24 @@ import "./App.css";
 import TweetsList from "./components/TweetsList/TweetsList";
 import TweetsForm from "./components/TweetForm/TweetForm";
 import { useTweets } from "./hooks/useTweets";
-import React, { useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route, Link, useParams } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Switch, Route, NavLink } from "react-router-dom";
 
 function App() {
   const { tweets } = useTweets();
-  useEffect(() => {
-    console.log(tweets);
-  }, [tweets]);
   return (
     <Router>
       <div className="container">
         <nav className="navbar">
           <ul>
             <li>
-              <Link to="/">Home</Link>
+              <NavLink exact to="/">Home</NavLink>
             </li>
             <li>
-              <Link to="/add">Add tweet</Link>
+              <NavLink exact to="/add">Add tweet</NavLink>
             </li>
             <li>
-              <Link to="/liked">Liked tweets</Link>
+              <NavLink exact to="/liked">Liked tweets</NavLink>
             </li>
           </ul>
         </nav>
@@ -36,14 +33,19 @@ function App() {
               <h1 className="page-title">Add new tweet</h1>
               <TweetsForm />
             </Route>
-            <Route path="/">
+            <Route path="/edit/:tweetId">
+              <h1 className="page-title">Edit tweet</h1>
+              <TweetsForm />
+            </Route>
+            <Route exact path="/">
               <h1 className="page-title">Simple twitter</h1>
               <TweetsList tweetsData={tweets} />
             </Route>
+            <Route path="*">
+              <h1 className="page-title">Page not found!</h1>
+            </Route>
           </Switch>
         </div>
-
-        {/* <div>edit form</div> */}
       </div>
     </Router>
   );
